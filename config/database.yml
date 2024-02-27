@@ -1,0 +1,28 @@
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  database: login_signup
+  username: postgres
+  password: postgres
+  host: localhost
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+  database: login_signup
+  username: postgres
+  password: postgres
+# And be sure to use new-style password hashing:
+#   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
+# development:
+#   adapter: mysql2
+#   encoding: utf8
+#   reconnect: false
+#   database: gatherin_rockers
+#   pool: 5
+#   username: root
+#   password: 

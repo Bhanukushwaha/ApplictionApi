@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
   before_action :authorize_request!, only: [:password_update]
+  def index
+     @users = User.all
+     render json: @users
+   end
   def create
     if (params[:user][:password] != params[:user][:confirmation_password])
       render json: {message: "Password and Conform Password does not match?" }, status: :unprocessable_entity
@@ -32,7 +36,7 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:email, :password)
+    params.require(:user).permit(:email, :password, :name)
   end
 end
 

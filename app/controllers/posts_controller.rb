@@ -1,12 +1,12 @@
 class PostsController < ApplicationController
-  before_action :authorize_request!, only: [:likes, :unlike]
-  before_action :find_post,only: [:show,:update,:destroy,:likes, :unlike]
+  before_action :authorize_request!, only: [:likes, :unlike, :create_comments]
+  before_action :find_post,only: [:show,:update,:destroy,:likes, :unlike, :create_comments]
   def index
     @posts = Post.all
     render json: @posts
   end
 
-  def show    
+  def show
    render json: {data: @post}
   end
 
@@ -21,10 +21,9 @@ class PostsController < ApplicationController
       else
         render json: {error: @like.errors}, status: :unprocessable_entity
       end
-    end     
+    end
   end
   def unlike
-    debugger
     @likes = @post.likes.where(user_id:@current_user.id)
     if @likes.present?
        @likes.destroy_all
@@ -33,13 +32,31 @@ class PostsController < ApplicationController
       return render json: {error: "Like not found for this post"}, status: :not_found
     end
   end
+  def create_comments
+    @comment = @post.comments.new(comment_params)
+    @comment.user_id = @current_user.id
+    if @comment.save
+      render json: {data: @comment}
+    else
+      return render json: {error: @comment.errors}, status: :unprocessable_entity
+    end
+  end
   def create
-    @post = Post.new(user_params)
+    @post = Post.new(post_params)
     if @post.save
       render json: @post, status: :created
     else
       render json: { errors: @post.errors.full_messages.join(", ") },
       status: :unprocessable_entity
+    end
+  end
+  def destroy
+    debugger
+    @post = Post.find(params[:id])
+    if @post.destroy
+      render json: {masege: "post destroy sussefully"}
+     else
+      return render json: {error: @post.errors}, post: :unprocessable_entity
     end
   end
   private
@@ -50,7 +67,11 @@ class PostsController < ApplicationController
     end
   end
 
-  def user_params
-    params.require(:post).permit(:title, :description, :user_id)
+  def comment_params
+    params.require(:comment).permit(:title, :user_id, :post_id)
+  end
+
+  def post_params
+    params.require(:post).permit(:title, :description, :user_id, :image)
   end
 end

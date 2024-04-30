@@ -8,6 +8,9 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
     render json: {data: @article, masege: "show articles sussefully"}
   end
+  def like
+    
+  end
   def create
    @article = Article.new(user_params)
     if @article.save
@@ -19,6 +22,6 @@ class ArticlesController < ApplicationController
   end
   private
   def user_params
-    params.require(:article).permit(:first_name, :last_name, :mobile_num)
+    params.require(:article).permit(:first_name, :last_name, :mobile_num, :user_id)
   end
 end

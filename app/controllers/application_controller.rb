@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 	skip_before_action :verify_authenticity_token
+  
   def authorize_request!
     if request.headers['Token'].present?
       header = request.headers['Token']
@@ -17,5 +18,5 @@ class ApplicationController < ActionController::Base
         status: :unprocessable_entity
     end
   end
-
+  
 end

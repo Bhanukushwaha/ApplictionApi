@@ -51,7 +51,6 @@ class PostsController < ApplicationController
     end
   end
   def destroy
-    debugger
     @post = Post.find(params[:id])
     if @post.destroy
       render json: {masege: "post destroy sussefully"}

@@ -1,8 +1,16 @@
 class UsersController < ApplicationController
-  before_action :authorize_request!, only: [:password_update]
+  before_action :authorize_request!, only: [:password_update, :profile]
   def index
-     @users = User.all
-     render json: @users
+    @users = User.all
+    render json: @users
+   end
+  def profile
+    @project = @current_user
+    render json: @project
+  end
+   def show    
+    @user = User.find_by(id: params[:id])
+    render json: {data: @user}
    end
   def create
     if (params[:user][:password] != params[:user][:confirmation_password])

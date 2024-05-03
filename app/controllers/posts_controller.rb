@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :authorize_request!, only: [:likes, :unlike, :create_comments]
+  before_action :authorize_request!, only: [:index, :likes, :unlike, :create_comments]
   before_action :find_post,only: [:show,:update,:destroy,:likes, :unlike, :create_comments]
   def index
     @posts = Post.all

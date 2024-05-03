@@ -1,10 +1,9 @@
 class ApplicationController < ActionController::Base
 	skip_before_action :verify_authenticity_token
-  
-  def authorize_request!
+  helper_method :current_user
+  def current_user
     if request.headers['Token'].present?
       header = request.headers['Token']
-      header = header.split(' ').last if header
       begin
         @decoded = JsonWebToken.decode(header)
         @current_user = User.find(@decoded[:user_id])
@@ -14,9 +13,11 @@ class ApplicationController < ActionController::Base
         render json: { errors: e.message }, status: :unauthorized
       end
     else
-      render json: { errors: "you are not unauthorized && you token has been expired" },
-        status: :unprocessable_entity
+      @current_user = nil
     end
   end
-  
+
+  def authorize_request!
+    return render json: { errors: "you are not unauthorized && you token has been expired" },status: :unprocessable_entity unless current_user.present?
+  end  
 end

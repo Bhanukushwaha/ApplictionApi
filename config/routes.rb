@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
   resources :users
   # get 'like/id' => 'articles#like'
-  # post '/users', to: 'users#create'
+  get '/profile', to: 'users#profile'
   post '/auth/login', to: 'authentication#login'
   post '/users/password_update', to: 'users#password_update'
 end

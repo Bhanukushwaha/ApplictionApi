@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-  before_action :authorize_request!, only: [:index, :likes, :unlike, :create_comments]
-  before_action :find_post,only: [:show,:update,:destroy,:likes, :unlike, :create_comments]
+  before_action :authorize_request!
+  before_action :find_post,only: [:show,:update,:destroy,:likes, :unlike,:comments, :create_comments]
   def index
     @posts = Post.all
     render json: @posts
@@ -11,7 +11,7 @@ class PostsController < ApplicationController
   end
 
   def likes
-    if Like.where(user_id:@current_user.id, likeable:params[:id].to_i, likeable_type:"Post").present?
+    if Like.where(user_id: @current_user.id, likeable:params[:id].to_i, likeable_type:"Post").present?
       return render json: {message: "You have already like this post"}, status: :ok
     else
       @like = @post.likes.new
@@ -24,7 +24,7 @@ class PostsController < ApplicationController
     end
   end
   def unlike
-    @likes = @post.likes.where(user_id:@current_user.id)
+    @likes = @post.likes.where(user_id: @current_user.id)
     if @likes.present?
        @likes.destroy_all
       return render json: {message: "post unlike successfully"}
@@ -40,6 +40,10 @@ class PostsController < ApplicationController
     else
       return render json: {error: @comment.errors}, status: :unprocessable_entity
     end
+  end
+  def comments
+    comments = @post.comments.map{|b| b.attributes.merge(user: b.user)}
+    render json: {data: comments}
   end
   def create
     @post = Post.new(post_params)
@@ -66,7 +70,7 @@ class PostsController < ApplicationController
     end
   end
 
-  def comment_params
+  def comment_params    
     params.require(:comment).permit(:title, :user_id, :post_id)
   end
 

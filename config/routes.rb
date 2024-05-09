@@ -7,8 +7,9 @@ Rails.application.routes.draw do
   resources :posts do
     member do
       post :likes
-      delete :unlike
+      post :unlike
       post :create_comments
+      get :comments
     end
   end
   resources :users

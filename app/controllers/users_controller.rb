@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
-  before_action :authorize_request!, only: [:password_update, :profile]
+  before_action :authorize_request!, only: [:index, :password_update, :profile]
   def index
-    @users = User.all
+    @users = User.where.not(id: current_user.id)
     render json: @users
    end
   def profile
-    @project = @current_user
+    @project = current_user
     render json: @project
   end
    def show    

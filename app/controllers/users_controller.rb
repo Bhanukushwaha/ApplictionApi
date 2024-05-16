@@ -3,14 +3,16 @@ class UsersController < ApplicationController
   def index
     @users = User.where.not(id: current_user.id)
     render json: @users
-   end
-  def profile
+  end
+ 
+  def profile    
     @project = current_user
     render json: @project
   end
-   def show    
+   def show
     @user = User.find_by(id: params[:id])
-    render json: {data: @user}
+    render json: @user, root: "data", each_serializer: UserSerializer 
+    # render json: {data: @user}
    end
   def create
     if (params[:user][:password] != params[:user][:confirmation_password])

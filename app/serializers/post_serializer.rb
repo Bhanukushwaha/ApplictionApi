@@ -17,5 +17,4 @@ class PostSerializer < ActiveModel::Serializer
   attribute :likes_counts do |object|
    @object.likes.count
   end
-  
 end

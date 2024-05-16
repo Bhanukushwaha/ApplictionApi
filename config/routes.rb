@@ -13,7 +13,12 @@ Rails.application.routes.draw do
     end
   end
   resources :users
-  # get 'like/id' => 'articles#like'
+  resources :follows do
+    get :following, on: :collection
+    get :followers, on: :collection
+    post :unfollow, on: :collection
+  end
+  # get 'like/id' => 'articles#like' 
   get '/profile', to: 'users#profile'
   post '/auth/login', to: 'authentication#login'
   post '/users/password_update', to: 'users#password_update'

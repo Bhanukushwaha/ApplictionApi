@@ -17,5 +17,4 @@ class UserSerializer < ActiveModel::Serializer
   attribute :following do |object|
     @object.followings.count
   end
-
 end

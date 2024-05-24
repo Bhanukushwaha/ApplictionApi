@@ -15,6 +15,7 @@ class UsersController < ApplicationController
     # render json: {data: @user}
    end
   def create
+    debugger
     if (params[:user][:password] != params[:user][:confirmation_password])
       render json: {message: "Password and Conform Password does not match?" }, status: :unprocessable_entity
     else

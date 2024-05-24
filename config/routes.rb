@@ -1,4 +1,6 @@
 Rails.application.routes.draw do  
+  get 'messages/index'
+  get 'messages/create'
   # get 'users/index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Defines the root path route ("/")
@@ -13,6 +15,7 @@ Rails.application.routes.draw do
     end
   end
   resources :users
+  resources :messages
   resources :follows do
     get :following, on: :collection
     get :followers, on: :collection

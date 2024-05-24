@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  config.hosts << "eef8-2401-4900-1f38-17e7-1aae-43a6-2f65-329d.ngrok-free.app"
+  config.hosts << "8017-2401-4900-1c5c-bf15-6bbf-bbf-c7e1-7e0.ngrok-free.app"
   # Settings specified here will take precedence over those in config/application.rb.
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development

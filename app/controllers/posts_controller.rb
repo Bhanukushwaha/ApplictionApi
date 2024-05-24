@@ -2,20 +2,24 @@ class PostsController < ApplicationController
   before_action :authorize_request!
   before_action :find_post,only: [:show,:update,:destroy,:likes, :unlike,:comments, :create_comments]
   def index
-    @posts = Post.all
+    if ActiveRecord::Type::Boolean.new.cast(params[:is_profile_screen])
+      @posts = current_user.posts
+    else
+      @posts = Post.all
+    end
     render json: @posts
   end
-
   def show
    render json: {data: @post}
   end
 
   def likes
-    if Like.where(user_id: @current_user.id, likeable:params[:id].to_i, likeable_type:"Post").present?
+    debugger
+    if Like.where(user_id: current_user.id, likeable:params[:id].to_i, likeable_type:"Post").present?
       return render json: {message: "You have already like this post"}, status: :ok
     else
       @like = @post.likes.new
-      @like.user_id = @current_user.id   
+      @like.user_id = current_user.id   
       if @like.save
         render json: {data: @like}
       else
@@ -34,7 +38,7 @@ class PostsController < ApplicationController
   end
   def create_comments
     @comment = @post.comments.new(comment_params)
-    @comment.user_id = @current_user.id
+    @comment.user_id = current_user.id
     if @comment.save
       render json: {data: @comment}
     else
@@ -45,8 +49,8 @@ class PostsController < ApplicationController
     comments = @post.comments.map{|b| b.attributes.merge(user: b.user)}
     render json: {data: comments}
   end
-  def create
-    @post = Post.new(post_params)
+  def create    
+    @post = current_user.posts.new(post_params)
     if @post.save
       render json: @post, status: :created
     else
@@ -75,6 +79,6 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :description, :user_id, :image)
+    params.require(:post).permit(:title, :description, :image)
   end
 end

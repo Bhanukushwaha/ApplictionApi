@@ -7,14 +7,13 @@ class PostsController < ApplicationController
     else
       @posts = Post.all
     end
-    render json: @posts
+    render json: @posts.order('created_at DESC')
   end
   def show
    render json: {data: @post}
   end
 
   def likes
-    debugger
     if Like.where(user_id: current_user.id, likeable:params[:id].to_i, likeable_type:"Post").present?
       return render json: {message: "You have already like this post"}, status: :ok
     else
@@ -49,7 +48,7 @@ class PostsController < ApplicationController
     comments = @post.comments.map{|b| b.attributes.merge(user: b.user)}
     render json: {data: comments}
   end
-  def create    
+  def create
     @post = current_user.posts.new(post_params)
     if @post.save
       render json: @post, status: :created

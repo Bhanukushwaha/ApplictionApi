@@ -15,13 +15,14 @@ class UsersController < ApplicationController
     # render json: {data: @user}
    end
   def create
-    debugger
     if (params[:user][:password] != params[:user][:confirmation_password])
       render json: {message: "Password and Conform Password does not match?" }, status: :unprocessable_entity
     else
       @user = User.new(user_params)
       if @user.save
-        render json: @user, status: :created
+        token = JsonWebToken.encode(user_id: @user.id)
+        time = Time.now + 24.hours.to_i
+        render json: { token: token, exp: time.strftime("%m-%d-%Y %H:%M"), user: @user}, status: :ok
       else
         render json: { errors: @user.errors.full_messages.join(", ") },
         status: :unprocessable_entity

@@ -18,3 +18,6 @@ class UserSerializer < ActiveModel::Serializer
     @object.followings.count
   end
 end
+class Fruit < ApplicationRecord
+  scope :with_juice, -> { where("juice > 0") }
+end

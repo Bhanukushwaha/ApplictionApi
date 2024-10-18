@@ -73,3 +73,4 @@ gem 'jwt'
 gem 'bcrypt'
 gem 'active_model_serializers'
 gem "figaro"
+gem 'rack-cors'
